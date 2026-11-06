@@ -15,19 +15,23 @@ Rectangle::Rectangle() {
 
 Rectangle::Rectangle(const Point* tl, const Point* br) {
     if (tl == nullptr || br == nullptr) {
-        throw std::invalid_argument("Loi: Diem truyen vao khong duoc la nullptr!");
+        Rectangle();
     }
-    this->_topLeft = new Point(*tl);
-    this->_bottomRight = new Point(*br);
+    else{
+        this->_topLeft = new Point(*tl);
+        this->_bottomRight = new Point(*br);
+    }
     Rectangle::InstanceCount++;
 }
 
 Rectangle::Rectangle(const Rectangle& other) {
     if (other._topLeft == nullptr || other._bottomRight == nullptr) {
-        throw std::invalid_argument("Loi: Hinh chu nhat chua diem nullptr!");
+        Rectangle();
     }
-    this->_topLeft = new Point(*(other._topLeft));
-    this->_bottomRight = new Point(*(other._bottomRight));
+    else{
+        this->_topLeft = new Point(*(other._topLeft));
+        this->_bottomRight = new Point(*(other._bottomRight));
+    }
     Rectangle::InstanceCount++;
 }
 
@@ -47,40 +51,42 @@ Rectangle::~Rectangle() {
     Rectangle::InstanceCount--;
 }
 
-void Rectangle::SetTopLeft(const Point* value) {
+bool Rectangle::SetTopLeft(const Point* value) {
     if (value == nullptr) {
-        throw std::invalid_argument("Loi: Diem topLeft moi khong duoc la nullptr!");
+        return false;
     }
     if (value -> X() >= _bottomRight -> X() || value -> Y() <= _bottomRight -> Y()){
-        throw std::out_of_range("Vi tri topleft khong hop le!");
+        return false;
     }
     if (_topLeft != nullptr) delete _topLeft;
     this->_topLeft = new Point(*value);
+    return true;
 }
 
-void Rectangle::SetBottomRight(const Point* value) {
+bool Rectangle::SetBottomRight(const Point* value) {
     if (value == nullptr) {
-        throw std::invalid_argument("Loi: Diem bottomRight moi khong duoc la nullptr!");
+        return false;
     }
     if (value -> X() <= _topLeft -> X() || value -> Y() >= _topLeft -> Y()){
-        throw std::out_of_range("Vi tri bottom right khong hop le!");
+        return false;
     }
     if (this->_bottomRight != nullptr) {
         delete this->_bottomRight;
     }
     this->_bottomRight = new Point(*value);
+    return true;
 }
 
 float Rectangle::Width() const {
     if (this->_topLeft == nullptr || this->_bottomRight == nullptr) {
-        throw std::runtime_error("Loi: Toa do hinh chu nhat chua duoc khoi tao!");
+        return 0.0;
     }
     return std::abs(this->_bottomRight->X() - this->_topLeft->X());
 }
 
 float Rectangle::Height() const {
     if (this->_topLeft == nullptr || this->_bottomRight == nullptr) {
-        throw std::runtime_error("Loi: Toa do hinh chu nhat chua duoc khoi tao!");
+        return 0.0;
     }
     return std::abs(this->_bottomRight->Y() - this->_topLeft->Y());
 }
@@ -91,4 +97,27 @@ float Rectangle::Perimeter() const {
 
 float Rectangle::Area() const {
     return this->Width() * this->Height();
+}
+
+std::string Rectangle::ToString() const{
+    std::string res = "Top Left: " + this->_topLeft->ToString() + ", Bottom Right: " + this->_bottomRight->ToString();
+    double width = this->Width();
+    double height = this->Height();
+    double perimeter = this->Perimeter();
+    double area = this->Area();
+    res += ", Width: " + std::to_string(width) + ", Height: " + std::to_string(height) 
+        + ", Perimeter: " + std::to_string(perimeter) + ", Area: " + std::to_string(area);
+    return res;
+}
+std::istream& operator >> (std::istream &in, Rectangle &r){
+    std::cout << "Moi thay nhap thong tin hinh chu nhat: \n";
+    std::cout << "Moi thay nhap diem tren ben trai: \n";
+    in >> *r._topLeft;
+    std::cout << "Moi thay nhap diem duoi ben phai: \n";
+    in >> *r._bottomRight;
+    return in;
+}
+std::ostream& operator << (std::ostream &out, const Rectangle& r){
+    out << r.ToString() << "\n";
+    return out;
 }

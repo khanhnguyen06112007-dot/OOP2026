@@ -1,5 +1,5 @@
 #include "Line.h"
-
+#include "Point.h"
 double Line::Length() const{
     if (this -> _start == nullptr || this -> _end == nullptr){
         return 0.0;
@@ -20,6 +20,7 @@ bool Line::SetStart(const Point *value){
         return false;
     }
     _start = new Point(*value);
+    return true;
 }
 
 bool Line::SetEnd(const Point *value){
@@ -27,6 +28,7 @@ bool Line::SetEnd(const Point *value){
         return false;
     }
     _end = new Point(*value);
+    return true;
 }
 
 Line::Line(){
@@ -67,7 +69,20 @@ Line::~Line(){
     Line::InstanceCount--;
 }
 std::string Line::ToString() const{
-    
+    std::string res = "Line: Start = " + _start -> ToString() + ", End = " + _end -> ToString();
+    double len = Length();
+    res += ", Length = " + std::to_string(len);
+    return res;
 }
-    friend std::istream& operator >> (std::istream &in, Line& l);
-    friend std::ostream& operator << (std::ostream &out, const Line& l);
+std::istream& operator >> (std::istream &in, Line& l){
+    std::cout << "Moi thay nhap thong tin doan thang: \n";
+    std::cout << "Moi thay nhap diem bat dau: \n";
+    in >> *l._start;
+    std::cout << "Moi thay nhap diem ket thuc: \n";
+    in >> *l._end;
+    return in;
+}
+std::ostream& operator << (std::ostream &out, const Line& l){
+    out << l.ToString() << "\n";
+    return out;
+}

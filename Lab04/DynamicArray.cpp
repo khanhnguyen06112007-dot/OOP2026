@@ -1,4 +1,6 @@
 #include "DynamicArray.h"
+#include <string>
+#include <iostream>
 int DynamicArray::Length() const{
     return _len;
 }
@@ -9,17 +11,15 @@ DynamicArray::DynamicArray() {
 }
 
 DynamicArray::DynamicArray(int len) {
-    if (len < 0) {
-        throw std::invalid_argument("Loi: Do dai mang khong duoc am!");
+    if (len <= 0) {
+        DynamicArray();
     }
-    this->_len = len;
-    if (this->_len > 0) {
+    else{
+        this->_len = len;
         this->_a = new int[this->_len];
         for (int i = 0; i < _len; i++){
             _a[i] = 0;
         }
-    } else {
-        this->_a = nullptr;
     }
     DynamicArray::InstanceCount++;
 }
@@ -43,6 +43,7 @@ DynamicArray::~DynamicArray() {
             _a[i] = 0;
         }
         delete[]_a;
+        _len = 0;
         _a = nullptr;
     }
 }
@@ -66,14 +67,55 @@ void DynamicArray::PushBack(int value) {
 
 int DynamicArray::GetAt(int i) const {
     if (i < 0 || i >= this->_len) {
-        throw std::out_of_range("Loi: Chi so truy cap nam ngoai pham vi mang!");
+        return -1;
     }
     return this->_a[i];
 }
 
 void DynamicArray::SetAt(int i, int value) {
     if (i < 0 || i >= this->_len) {
-        throw std::out_of_range("Loi: Chi so truy cap nam ngoai pham vi mang!");
+        return;
     }
     this->_a[i] = value;
+}
+
+std::string DynamicArray::ToString() const{
+    std::string result = "len = " + std::to_string(this->_len) + ", a = ";
+    result += "[";
+    for (int i = 0; i < this->_len; i++) {
+        result += std::to_string(this->_a[i]);
+        if (i < this->_len - 1) {
+            result += ", ";
+        }
+    }
+    result += "]";
+    return result;
+}
+std::istream& operator >> (std::istream &in, DynamicArray &arr){
+    while(true){
+        std::cout << "Nhap vao so luong phan tu cua mang: ";
+        in >> arr._len;
+        if (arr._len < 0) {
+            std::cout << "So luong phan tu phai lon hon hoac bang 0. Vui long nhap lai." << std::endl;
+        } else {
+            break;
+        }
+    }
+    if (arr._a != nullptr) {
+        delete[] arr._a;
+    }
+    if (arr._len > 0) {
+        arr._a = new int[arr._len];
+        for (int i = 0; i < arr._len; i++) {
+            std::cout << "Nhap vao phan tu thu " << i << ": ";
+            in >> arr._a[i];
+        }
+    } else {
+        arr._a = nullptr;
+    }
+    return in;
+}
+std::ostream& operator << (std::ostream &out, const DynamicArray& arr){
+    out << arr.ToString() << "\n";
+    return out;
 }
