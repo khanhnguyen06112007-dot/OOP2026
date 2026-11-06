@@ -50,6 +50,7 @@ std::string Point::ToString() const{
     return res;
 }
 std::istream& operator >> (std::istream &in, Point &p){
+    std::cout << "Moi thay nhap toa do diem: \n";
     float num;
     while(true){
         std::cout << "Moi thay nhap hoanh do x = ";

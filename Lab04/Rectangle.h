@@ -11,8 +11,8 @@ public:
 
     Point* TopLeft() const;
     Point* BottomRight() const;
-    void SetTopLeft(const Point* value);
-    void SetBottomRight(const Point* value);
+    bool SetTopLeft(const Point* value);
+    bool SetBottomRight(const Point* value);
 public:
     float Width() const;
     float Height() const;
@@ -23,5 +23,9 @@ public:
     Rectangle(const Point* tl, const Point* br);
     Rectangle(const Rectangle& other); 
     ~Rectangle();
+public:
+    std::string ToString() const;
+    friend std::istream& operator >> (std::istream &in, Rectangle &r);
+    friend std::ostream& operator << (std::ostream &out, const Rectangle& r);
 };
 #endif

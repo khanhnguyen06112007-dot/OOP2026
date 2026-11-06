@@ -15,11 +15,14 @@ public:
     void PushBack(int value);
     int GetAt(int i) const;
     void SetAt(int i, int value);
-
 public:
     DynamicArray();
     DynamicArray(int len);
     DynamicArray(const DynamicArray& other);
     ~DynamicArray();
+public:
+    std::string ToString() const;
+    friend std::istream& operator >> (std::istream &in, DynamicArray &arr);
+    friend std::ostream& operator << (std::ostream &out, const DynamicArray& arr);
 };
 #endif
